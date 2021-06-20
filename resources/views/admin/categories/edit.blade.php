@@ -2,7 +2,7 @@
 
     <div class="container">
         
-        <form action="/admin/categories/{{ $category->id }}" method="post">
+        <form action="/admin/categories/{{ $category->id }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('put')
             

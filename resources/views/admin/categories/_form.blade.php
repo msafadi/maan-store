@@ -35,6 +35,15 @@
     </div>
 </div>
 <div class="form-group mb-3">
+    <label for="image">Image</label>
+    <div>
+        <input type="file" id="image" name="image" class="form-control @error('image') is-invalid @enderror">
+        @error('image')
+        <p class="invalid-feedback">{{ $message }}</p>
+        @enderror
+    </div>
+</div>
+<div class="form-group mb-3">
     <label for="status">Status</label>
     <div>
         <div class="form-check">

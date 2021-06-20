@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <title>Categories</title>
 </head>
 
@@ -97,7 +97,7 @@
                 <div class="col-md-9">
                     {{-- @yield('flash-message')
                     @yield('content') --}}
-                    
+
                     <h2 class="mb-4">{{ $pageTitle ?? 'Default Title' }}</h2>
                     {{ $slot ?? '' }}
                 </div>

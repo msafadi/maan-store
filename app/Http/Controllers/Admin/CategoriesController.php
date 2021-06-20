@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -58,7 +59,19 @@ class CategoriesController extends Controller
             'parent_id' => 'nullable|int|exists:categories,id',
             'description' => 'nullable|string',
             'status' => 'in:active,inactive',
+            'image' => 'nullable|image|max:1232896|dimensions:min_width=100,min_height=100',
         ]);
+
+        $image_path = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image'); // UploadedFile
+            $image_path = $file->store('/uploads', 'public');
+        
+            // $file->getClientOriginalName(); // File name
+            // $file->getClientOriginalExtension(); // File extension .png
+            // $file->getSize(); // File size in bytes
+            // $file->getMimeType(); // Ex.: image/png
+        }
 
         // $request->status;
         // $request->post('status')
@@ -70,6 +83,7 @@ class CategoriesController extends Controller
             'parent_id' => $request->input('parent_id'),
             'description' => $request->input('description'),
             'status' => $request->input('status'),
+            'image_path' => $image_path,
         ]);
 
         /*
@@ -142,7 +156,18 @@ class CategoriesController extends Controller
             'parent_id' => 'nullable|int|exists:categories,id',
             'description' => 'nullable|string',
             'status' => 'in:active,inactive',
+            'image' => 'nullable|image|max:1232896|dimensions:min_width=100,min_height=100',
         ]);
+
+        $category = Category::findOrFail($id);
+
+        $old_image = $image_path = $category->image_path;
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image'); // UploadedFile
+            $image_path = $file->store('/uploads', 'public');
+            //
+        }
 
         // $rules = [
         //     'name' => 'required|string|min:5|max:255',
@@ -156,15 +181,19 @@ class CategoriesController extends Controller
         //$validator->fails(); // true or false
         //$validator->errors(); // Return all error messages
 
-
-        $category = Category::findOrFail($id);
         $category->update([
             'name' => $request->input('name'),
             'slug' => Str::slug($request->input('name')),
             'parent_id' => $request->input('parent_id'),
             'description' => $request->input('description'),
             'status' => $request->input('status'),
+            'image_path' => $image_path,
         ]);
+
+        //
+        if ($old_image && $old_image != $image_path) {
+            Storage::disk('public')->delete($old_image);
+        }
 
         /*$category->forceFill([
             'name' => $request->input('name'),
@@ -192,12 +221,16 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        Category::destroy($id);
+        //Category::destroy($id);
         
         // Category::where('id', '=', $id)->delete();
 
-        // $category = Category::findOrFail($id);
-        // $category->delete();
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        if ($category->image_path) {
+            Storage::disk('public')->delete($category->image_path);
+        }
 
         return redirect('/admin/categories')
             ->with('success', 'Category deleted!');

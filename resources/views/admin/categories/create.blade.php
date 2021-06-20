@@ -2,7 +2,7 @@
 
     <div class="container">
         
-        <form action="/admin/categories" method="post">
+        <form action="/admin/categories" method="post" enctype="multipart/form-data">
             @csrf
 
             @include('admin.categories._form')
