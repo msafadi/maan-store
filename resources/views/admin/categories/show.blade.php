@@ -1,6 +1,5 @@
-@extends('layouts.dashboard')
-
-@section('content')
+<x-dashboard-layout>
+    
     <div class="container">
         <h2>{{ $category->name }}</h2>
 
@@ -22,5 +21,5 @@
         </dl>
 
     </div>
-
-@endsection
+    
+</x-dashboard-layout>

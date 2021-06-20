@@ -1,6 +1,4 @@
-@extends('layouts.dashboard')
-
-@section('content')
+<x-dashboard-layout>
 
     <div class="container">
         
@@ -13,4 +11,4 @@
 
     </div>
 
-@endsection
+</x-dashboard-layout>

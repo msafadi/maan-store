@@ -95,8 +95,9 @@
 
                 </aside>
                 <div class="col-md-9">
-                    @yield('flash-message')
-                    @yield('content')
+                    {{-- @yield('flash-message')
+                    @yield('content') --}}
+                    
                     <h2 class="mb-4">{{ $pageTitle ?? 'Default Title' }}</h2>
                     {{ $slot ?? '' }}
                 </div>

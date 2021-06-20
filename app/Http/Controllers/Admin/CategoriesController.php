@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
@@ -51,6 +52,13 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
+
+        $this->validate($request, [
+            'name' => 'required|string|min:3|max:255',
+            'parent_id' => 'nullable|int|exists:categories,id',
+            'description' => 'nullable|string',
+            'status' => 'in:active,inactive',
+        ]);
 
         // $request->status;
         // $request->post('status')
@@ -128,6 +136,27 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        $request->validate([
+            'name' => 'required|string|min:5|max:255',
+            'parent_id' => 'nullable|int|exists:categories,id',
+            'description' => 'nullable|string',
+            'status' => 'in:active,inactive',
+        ]);
+
+        // $rules = [
+        //     'name' => 'required|string|min:5|max:255',
+        //     'parent_id' => 'nullable|int|exists:categories,id',
+        //     'description' => 'nullable|string',
+        //     'status' => 'in:active,inactive',
+        // ];
+        // $data = $request->all();
+        //$validator = Validator::make($data, $rules);
+        //$validator->validate();
+        //$validator->fails(); // true or false
+        //$validator->errors(); // Return all error messages
+
+
         $category = Category::findOrFail($id);
         $category->update([
             'name' => $request->input('name'),
