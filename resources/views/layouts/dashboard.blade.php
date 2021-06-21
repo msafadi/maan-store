@@ -71,11 +71,16 @@
                 <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
                     <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
                 </form>
-
+                {{-- @if (Auth::check()) --}}
+                @auth
                 <div class="text-end">
-                    <button type="button" class="btn btn-light text-dark me-2">Login</button>
-                    <button type="button" class="btn btn-primary">Sign-up</button>
+                    {{ auth()->user()->name }}
+                    <a href="#" onclick="document.getElementById('logout').submit()" class="btn btn-sm btn-light">Logout</a>
+                    <form action="{{ route('logout') }}" method="post" id="logout">
+                        @csrf
+                    </form>
                 </div>
+                @endauth
             </div>
         </div>
     </header>

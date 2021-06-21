@@ -11,7 +11,7 @@
     <div class="container">
         <h2 class="mb-2">Categories List</h2>
         <div class="table-toolbar mb-4">
-            <a href="/admin/categories/create" class="btn btn-sm btn-primary">Create</a>
+            <a href="{{ route('admin.categories.create') }}" class="btn btn-sm btn-primary">Create</a>
         </div>
 
         <x-flash-message />
@@ -41,14 +41,14 @@
                 @foreach ($entries as $category)
                 <tr>
                     <td>{{ $category->id }}</td>
-                    <td><a href="/admin/categories/{{ $category->id }}">{{ $category->name }}</a></td>
+                    <td><a href="{{ route('admin.categories.show', $category->id) }}">{{ $category->name }}</a></td>
                     <td>{{ $category->slug }}</td>
                     <td>{{ $category->parent_id }}</td>
                     <td>{{ $category->created_at }}</td>
                     <td>{{ $category->status }}</td>
-                    <td><a href="/admin/categories/{{ $category->id }}/edit" class="btn btn-sm btn-dark">Edit</a></td>
+                    <td><a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-dark">Edit</a></td>
                     <td>
-                        <form action="/admin/categories/{{ $category->id }}" method="post">
+                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="post">
                             @csrf
                             @method('delete')
                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>

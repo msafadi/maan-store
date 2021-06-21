@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoriesController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,28 +18,43 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})
+->middleware(['auth', 'verified'])
+->name('dashboard');
 
-Route::get('/welcome', 'HomeController@index');
+require __DIR__.'/auth.php';
 
-Route::get('/products', [ProductsController::class, 'index'])->name('products');
-Route::get('/products/{category}/{name?}', [ProductsController::class, 'show'])->name('products.show');
+Route::middleware('auth')
+    ->prefix('/admin')
+    ->namespace('Admin')
+    ->as('admin.')
+    ->group(function() {
 
-Route::match(['post', 'put', 'get'], '/products-create', function() {
-    return 'Create Product';
+        Route::prefix('/categories')->as('categories.')->group(function() {
+
+            Route::get('/', [CategoriesController::class, 'index'])->name('index');
+            Route::get('/create', [CategoriesController::class, 'create'])->name('create');
+            Route::get('/{id}', [CategoriesController::class, 'show'])->name('show');
+            Route::post('/', [CategoriesController::class, 'store'])->name('store');
+            Route::delete('/{id}', [CategoriesController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}/edit', [CategoriesController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [CategoriesController::class, 'update'])->name('update');
+        });
+
+        Route::resource('products', 'ProductsController')->names([
+            //'index' => 'admin.products.index',
+            //'create' => 'admin.products.create',
+        ]);
+
+        // Route::get('/products', [ProductsController::class, 'index']);
+        // Route::get('/products/create', [ProductsController::class, 'create']);
+        // Route::get('/products/{id}', [ProductsController::class, 'show']);
+        // Route::post('/products', [ProductsController::class, 'store']);
+        // Route::delete('/products/{id}', [ProductsController::class, 'destroy']);
+        // Route::get('/products/{id}/edit', [ProductsController::class, 'edit']);
+        // Route::put('/products/{id}', [ProductsController::class, 'update']);
+
 });
-
-Route::view('/hello', 'welcome', [
-    'title' => 'Welcome',
-]);
-
-Route::redirect('/home', '/');
-
-
-Route::get('/admin/categories', [CategoriesController::class, 'index']);
-Route::get('/admin/categories/create', [CategoriesController::class, 'create']);
-Route::get('/admin/categories/{id}', [CategoriesController::class, 'show']);
-Route::post('/admin/categories', [CategoriesController::class, 'store']);
-Route::delete('/admin/categories/{id}', [CategoriesController::class, 'destroy']);
-Route::get('/admin/categories/{id}/edit', [CategoriesController::class, 'edit']);
-Route::put('/admin/categories/{id}', [CategoriesController::class, 'update']);
 

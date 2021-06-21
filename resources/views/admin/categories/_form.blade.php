@@ -9,7 +9,7 @@
 @endif
 
 <div class="form-group mb-3">
-    <x-input name="name" :value="$category->name" label="Category Name" />
+    <x-form-control name="name" :value="$category->name" label="Category Name" />
 </div>
 <div class="form-group mb-3">
     <label for="parent_id">Parent</label>
