@@ -41,4 +41,10 @@ class Category extends Model
         return 'https://via.placeholder.com/200x200.png?text=No+Image';
     }
 
+    // 
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id','id');
+    }
+
 }

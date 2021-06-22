@@ -40,4 +40,31 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id', 'id');
+    }
+
+    public function reviewedProducts()
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'reviews',
+            'user_id',
+            'product_id',
+            'id',
+            'id'
+        )->using(Review::class);
+    }
+
+    // One-to-One: User has one profile
+    public function profile()
+    {
+        return $this->hasOne(
+            Profile::class,
+            'user_id',
+            'id'
+        );
+    }
 }

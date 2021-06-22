@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,4 +58,8 @@ Route::middleware('auth')
         // Route::put('/products/{id}', [ProductsController::class, 'update']);
 
 });
+
+Route::get('products', [ProductsController::class, 'index']);
+Route::get('products/{id}', [ProductsController::class, 'show'])->name('show');
+Route::post('reviews', [ProductsController::class, 'review'])->name('review');
 
