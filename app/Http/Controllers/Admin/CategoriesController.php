@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -18,13 +19,15 @@ class CategoriesController extends Controller
      */
     public function index()
     {
+
         // session()->get('success')
         // Session::get('success')
         //$flash_message = session('success');
         //session()->forget('success');
 
         // return collection (array) of category model
-        $categories = Category::paginate(10);
+        
+        $categories = Category::with('parent')->withCount('products')->simplePaginate(10);
         return view('admin.categories.index', [
             'entries' => $categories,
             //'flash_message' => $flash_message,
@@ -228,11 +231,41 @@ class CategoriesController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();
 
+        /*if ($category->image_path) {
+            Storage::disk('public')->delete($category->image_path);
+        }*/
+
+        return redirect('/admin/categories')
+            ->with('success', 'Category deleted!');
+    }
+
+    public function trashed()
+    {
+        $categories = Category::onlyTrashed()->paginate();
+        return view('admin.categories.trashed', [
+            'categories' => $categories,
+        ]);
+    }
+
+    public function restore(Request $request, $id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->restore();
+
+        return redirect('/admin/categories')
+            ->with('success', 'Category restored!');
+    }
+
+    public function forceDelete($id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->forceDelete();
+
         if ($category->image_path) {
             Storage::disk('public')->delete($category->image_path);
         }
 
         return redirect('/admin/categories')
-            ->with('success', 'Category deleted!');
+            ->with('success', 'Category deleted forever!');
     }
 }

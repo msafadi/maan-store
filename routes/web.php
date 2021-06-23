@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Middleware\SetAppLocale;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,13 +28,17 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-Route::middleware('auth')
+Route::middleware(['auth', 'app.locale'])
     ->prefix('/admin')
     ->namespace('Admin')
     ->as('admin.')
     ->group(function() {
 
         Route::prefix('/categories')->as('categories.')->group(function() {
+
+            Route::get('/trashed', [CategoriesController::class, 'trashed'])->name('trashed');
+            Route::put('/trashed/{id}', [CategoriesController::class, 'restore'])->name('restore');
+            Route::delete('/trashed/{id}', [CategoriesController::class, 'forceDelete'])->name('force-delete');
 
             Route::get('/', [CategoriesController::class, 'index'])->name('index');
             Route::get('/create', [CategoriesController::class, 'create'])->name('create');
@@ -42,6 +47,9 @@ Route::middleware('auth')
             Route::delete('/{id}', [CategoriesController::class, 'destroy'])->name('destroy');
             Route::get('/{id}/edit', [CategoriesController::class, 'edit'])->name('edit');
             Route::put('/{id}', [CategoriesController::class, 'update'])->name('update');
+
+
+
         });
 
         Route::resource('products', 'ProductsController')->names([

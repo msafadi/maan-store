@@ -6,7 +6,7 @@
 
 @endsection
 
-<x-dashboard-layout page-title="Categories">
+<x-dashboard-layout :page-title="__('Categories')">
 
     <div class="container">
         <h2 class="mb-2">Categories List</h2>
@@ -22,16 +22,17 @@
             </x-slot>
             <p>Alert body</p>
         </x-alert>
-
+        
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Slug</th>
-                    <th>Parent</th>
-                    <th>Created At</th>
-                    <th>Status</th>
+                    <th>{{ __('Name') }}</th>
+                    <th>@lang('Slug')</th>
+                    <th>{{ trans('Parent') }}</th>
+                    <th>{{ Lang::get('Products #') }}</th>
+                    <th>{{ __('Created At') }}</th>
+                    <th>{{ __('Status') }}</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -43,7 +44,8 @@
                     <td>{{ $category->id }}</td>
                     <td><a href="{{ route('admin.categories.show', $category->id) }}">{{ $category->name }}</a></td>
                     <td>{{ $category->slug }}</td>
-                    <td>{{ $category->parent_id }}</td>
+                    <td>{{ $category->parent->name }}</td>
+                    <td>{{ $category->products_count }}</td>
                     <td>{{ $category->created_at }}</td>
                     <td>{{ $category->status }}</td>
                     <td><a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-dark">Edit</a></td>

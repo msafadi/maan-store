@@ -65,6 +65,6 @@ class User extends Authenticatable implements MustVerifyEmail
             Profile::class,
             'user_id',
             'id'
-        );
+        )->withDefault();
     }
 }

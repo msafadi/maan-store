@@ -71,6 +71,9 @@
                 <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
                     <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
                 </form>
+                <div class="me-4">
+                    <a href="?lang=ar">ع</a> | <a href="?lang=en">E</a>
+                </div>
                 {{-- @if (Auth::check()) --}}
                 @auth
                 <div class="text-end">

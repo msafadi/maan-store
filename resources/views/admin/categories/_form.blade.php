@@ -12,7 +12,7 @@
     <x-form-control name="name" :value="$category->name" label="Category Name" />
 </div>
 <div class="form-group mb-3">
-    <label for="parent_id">Parent</label>
+    <label for="parent_id">{{ __('Parent') }}</label>
     <div>
         <select id="parent_id" name="parent_id" class="form-control @error('parent_id') is-invalid @enderror">
             <option value="">No Parent</option>
