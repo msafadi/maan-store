@@ -4,10 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name', 'category_id', 'description', 'image_path', 'slug', 'price',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'image_path',
+    ];
+
+    protected $appends = [
+        'image_url'
+    ];
 
     // One-to-Many: One Product has many ProductImage(s)
     public function images()
@@ -52,5 +67,18 @@ class Product extends Model
             'id',
             'id'
         )->using(Review::class);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_path) {
+            if (strpos($this->image_path, 'http://') === 0) {
+                return $this->image_path;
+            }
+            //return asset('storage/' . $this->image_path);
+            return Storage::disk('public')->url($this->image_path);
+        }
+
+        return 'https://via.placeholder.com/200x200.png?text=No+Image';
     }
 }
